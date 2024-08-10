@@ -1,0 +1,14 @@
+name: python
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - altair=5.3.0
+  - biopython=1.84
+  - jupyterlab
+  - pandas=2.2
+  - pyarrow
+  - python=3.12

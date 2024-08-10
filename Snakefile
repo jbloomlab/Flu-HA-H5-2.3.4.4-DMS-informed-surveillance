@@ -17,7 +17,9 @@ configfile: "config.yaml"
 
 rule all:
     input:
-        "results/usher_extracted_seqs/nt_seqs.fa",
+        "results/usher_extracted_seqs/prot_seqs.fa",
+        "results/dms_data/prot.fa",
+        "results/dms_data/phenotypes.csv",
 
 
 rule usher_prebuilt:
@@ -68,3 +70,20 @@ rule extract_usher_seqs:
             --prot_seqs {output.prot_seqs} \
             &> {log}
         """
+
+
+rule get_dms_data:
+    """Get the DMS data."""
+    params:
+        prot=config["dms"]["prot"],
+        phenotypes=config["dms"]["phenotypes"],
+        escape_by_species=config["dms"]["escape_by_species"],
+    output:
+        prot="results/dms_data/prot.fa",
+        phenotypes="results/dms_data/phenotypes.csv",
+    conda:
+        "envs/python.yml",
+    log:
+        "results/logs/get_dms_data.txt",
+    script:
+        "scripts/get_dms_data.py"

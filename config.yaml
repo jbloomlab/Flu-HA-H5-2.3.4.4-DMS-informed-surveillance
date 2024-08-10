@@ -6,3 +6,9 @@ usher_prebuilt:
   version_info: https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/fluA.GCF_000864105.1.NC_007362.1.latest.version.txt
   ref: NC_007362.1
   ref_cds_coords: [22, 1728]
+
+# deep mutational scanning (DMS) data
+dms:
+  prot: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/gene_sequence/protein.fasta
+  phenotypes: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes.csv
+  escape_by_species: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes_per_antibody_escape.csv
