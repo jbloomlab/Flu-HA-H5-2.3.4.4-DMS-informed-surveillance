@@ -20,6 +20,7 @@ rule all:
         "results/usher_extracted_seqs/prot_seqs.fa",
         "results/dms_data/prot.fa",
         "results/dms_data/phenotypes.csv",
+        "results/usher_prots_w_dms/alignment.fa",
 
 
 rule usher_prebuilt:
@@ -82,8 +83,36 @@ rule get_dms_data:
         prot="results/dms_data/prot.fa",
         phenotypes="results/dms_data/phenotypes.csv",
     conda:
-        "envs/python.yml",
+        "envs/python.yml"
     log:
         "results/logs/get_dms_data.txt",
     script:
         "scripts/get_dms_data.py"
+
+
+rule align_to_dms:
+    """Align all the proteins to the DMS sequences."""
+    input:
+        dms_prot=rules.get_dms_data.output.prot,
+        prots=rules.extract_usher_seqs.output.prot_seqs,
+    output:
+        alignment="results/usher_prots_w_dms/alignment.fa",
+    conda:
+        "envs/mafft.yml"
+    threads: 4
+    log:
+        "results/align_to_dms.txt",
+    shell:
+        # after aligning, we use awk to remove the first sequence since it is dms_prot
+        """
+        mafft \
+            --thread {threads} \
+            --auto \
+            --keeplength \
+            --add {input.prots} \
+            {input.dms_prot} \
+            2> {log} \
+            | awk 'BEGIN {{RS=">"; ORS=""}} NR>2 {{print ">" $0}}' \
+            > {output.alignment} \
+            2>> {log}
+        """
