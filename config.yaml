@@ -1,0 +1,8 @@
+# Configuration file
+
+# Pre-built UShER tree 
+usher_prebuilt: 
+  tree: https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/fluA.GCF_000864105.1.NC_007362.1.latest.pb.gz
+  version_info: https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/fluA.GCF_000864105.1.NC_007362.1.latest.version.txt
+  ref: NC_007362.1
+  ref_cds_coords: [22, 1728]

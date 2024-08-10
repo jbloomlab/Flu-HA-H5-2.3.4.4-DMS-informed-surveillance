@@ -1,0 +1,11 @@
+name: Flu-HA-H5-2.3.4.4-DMS-informed-surveillance
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - jupyterlab
+  - pandas=2.2
+  - snakemake=8.16

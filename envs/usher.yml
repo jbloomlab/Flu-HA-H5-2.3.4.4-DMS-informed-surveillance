@@ -1,0 +1,9 @@
+name: usher
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - usher=0.6.3

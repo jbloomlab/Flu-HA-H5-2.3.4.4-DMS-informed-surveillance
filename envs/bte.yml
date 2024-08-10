@@ -1,0 +1,13 @@
+name: bte
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - biopython=1.84
+  - bte=0.9.0
+  - jupyterlab
+  - pandas=2.1
+  - python=3.10
