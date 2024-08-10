@@ -76,7 +76,7 @@ rule extract_usher_seqs:
 rule get_dms_data:
     """Get the DMS data."""
     params:
-        prot=config["dms"]["prot"],
+        prot=config["dms"]["prot"],  # any terminal stop codon is removed
         phenotypes=config["dms"]["phenotypes"],
         escape_by_species=config["dms"]["escape_by_species"],
     output:

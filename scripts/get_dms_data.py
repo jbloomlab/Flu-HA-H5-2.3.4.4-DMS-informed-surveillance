@@ -1,3 +1,4 @@
+import io
 import sys
 import urllib
 
@@ -8,9 +9,14 @@ import pandas as pd
 
 sys.stdout = sys.stderr = open(snakemake.log[0], "w")
 
-urllib.request.urlretrieve(snakemake.params.prot, snakemake.output.prot)
-
-prot = Bio.SeqIO.read(snakemake.output.prot, "fasta")
+# get DMS protein, removing trailing stop codon if there is one
+with urllib.request.urlopen(snakemake.params.prot) as response:
+    fasta_content = response.read().decode("utf-8")
+fasta_io = io.StringIO(fasta_content)
+prot = Bio.SeqIO.read(fasta_io, "fasta")
+if prot[-1] == "*":
+    prot = prot[: -1]
+Bio.SeqIO.write([prot], snakemake.output.prot, "fasta")
 
 phenotypes = (
     pd.read_csv(snakemake.params.phenotypes)
