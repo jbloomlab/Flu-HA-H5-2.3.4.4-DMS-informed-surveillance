@@ -21,6 +21,7 @@ rule all:
         "results/dms_data/prot.fa",
         "results/dms_data/phenotypes.csv",
         "results/usher_prots_w_dms/alignment.fa",
+        "results/usher_prots_w_dms/seq_phenotypes.tsv",
 
 
 rule usher_prebuilt:
@@ -79,6 +80,7 @@ rule get_dms_data:
         prot=config["dms"]["prot"],  # any terminal stop codon is removed
         phenotypes=config["dms"]["phenotypes"],
         escape_by_species=config["dms"]["escape_by_species"],
+        decimal_scale=config["dms_decimal_scale"],
     output:
         prot="results/dms_data/prot.fa",
         phenotypes="results/dms_data/phenotypes.csv",
@@ -116,3 +118,21 @@ rule align_to_dms:
             > {output.alignment} \
             2>> {log}
         """
+
+
+rule assign_dms_phenos:
+    """Assign deep mutational scanning phenotypes to all sequences."""
+    input:
+        alignment=rules.align_to_dms.output.alignment,
+        dms_prot=rules.get_dms_data.output.prot,
+        phenotypes=rules.get_dms_data.output.phenotypes,
+    output:
+        tsv="results/usher_prots_w_dms/seq_phenotypes.tsv",
+    params:
+        decimal_scale=config["dms_decimal_scale"],
+    conda:
+        "envs/python.yml"
+    log:
+        "results/logs/assign_dms_phenos.txt",
+    script:
+        "scripts/assign_dms_phenos.py"

@@ -71,4 +71,8 @@ wts = phenotypes.set_index("sequential_site")["wildtype"].to_dict()
 wts_prot = dict(enumerate(str(prot.seq), start=1))
 assert all(aa == wts_prot[i] for (i, aa) in wts.items())
 
-phenotypes.to_csv(snakemake.output.phenotypes, index=False, float_format="%.4g")
+phenotypes.to_csv(
+    snakemake.output.phenotypes,
+    index=False,
+    float_format=f"%.{snakemake.params.decimal_scale}f",
+)

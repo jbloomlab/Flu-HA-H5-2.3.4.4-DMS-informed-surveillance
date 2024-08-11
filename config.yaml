@@ -12,3 +12,6 @@ dms:
   prot: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/gene_sequence/protein.fasta
   phenotypes: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes.csv
   escape_by_species: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes_per_antibody_escape.csv
+
+# for DMS phenotypes, keep this many digits to the right of the decimal
+dms_decimal_scale: 2
