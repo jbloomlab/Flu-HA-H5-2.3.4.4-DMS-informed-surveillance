@@ -80,10 +80,13 @@ rule get_dms_data:
         prot=config["dms"]["prot"],  # any terminal stop codon is removed
         phenotypes=config["dms"]["phenotypes"],
         escape_by_species=config["dms"]["escape_by_species"],
+        site_numbering_map=config["dms"]["site_numbering_map"],
         decimal_scale=config["dms_decimal_scale"],
+        site_numbering_schemes=config["dms"]["site_numbering_schemes"],
     output:
         prot="results/dms_data/prot.fa",
         phenotypes="results/dms_data/phenotypes.csv",
+        site_numbering_map="results/dms_data/site_numbering_map.csv",
     conda:
         "envs/python.yml"
     log:
@@ -126,10 +129,12 @@ rule assign_dms_phenos:
         alignment=rules.align_to_dms.output.alignment,
         dms_prot=rules.get_dms_data.output.prot,
         phenotypes=rules.get_dms_data.output.phenotypes,
+        site_numbering_map=rules.get_dms_data.output.site_numbering_map,
     output:
         tsv="results/usher_prots_w_dms/seq_phenotypes.tsv",
     params:
         decimal_scale=config["dms_decimal_scale"],
+        site_numbering_schemes=config["dms"]["site_numbering_schemes"],
     conda:
         "envs/python.yml"
     log:

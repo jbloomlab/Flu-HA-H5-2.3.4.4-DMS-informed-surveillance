@@ -14,10 +14,21 @@ with urllib.request.urlopen(snakemake.params.prot) as response:
     fasta_content = response.read().decode("utf-8")
 fasta_io = io.StringIO(fasta_content)
 prot = Bio.SeqIO.read(fasta_io, "fasta")
+protseq = str(prot.seq)
 if prot[-1] == "*":
     prot = prot[: -1]
 Bio.SeqIO.write([prot], snakemake.output.prot, "fasta")
 
+# get the site numbering map and add the wildtype
+site_numbering_map = pd.read_csv(snakemake.params.site_numbering_map)
+assert "wildtype" not in site_numbering_map.columns
+assert "sequential_site" in site_numbering_map.columns
+site_numbering_map["wildtype"] = site_numbering_map["sequential_site"].map(
+    lambda r: protseq[r - 1]
+)
+site_numbering_map.to_csv(snakemake.output.site_numbering_map, index=False)
+
+# Get the phenotypes
 phenotypes = (
     pd.read_csv(snakemake.params.phenotypes)
     .merge(
@@ -43,10 +54,8 @@ phenotypes = (
         }
     )
     [
-        [
-            "sequential_site",
-            "mature_H3_site",
-            "mature_H5_site",
+        [f"{scheme}_site" for scheme in snakemake.params.site_numbering_schemes]
+        + [
             "wildtype",
             "mutant",
             "entry_in_293T_cells",

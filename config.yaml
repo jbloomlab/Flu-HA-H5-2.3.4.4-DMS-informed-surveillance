@@ -1,15 +1,22 @@
 # Configuration file
 
-# Pre-built UShER tree 
+# Pre-built UShER tree, from:
+# https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/
 usher_prebuilt: 
   tree: https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/fluA.GCF_000864105.1.NC_007362.1.latest.pb.gz
   version_info: https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/fluA.GCF_000864105.1.NC_007362.1.latest.version.txt
   ref: NC_007362.1
   ref_cds_coords: [22, 1728]
 
-# deep mutational scanning (DMS) data
+# Deep mutational scanning (DMS) data from
+# https://github.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS
 dms:
   prot: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/gene_sequence/protein.fasta
+  site_numbering_map: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/data/site_numbering_map.csv
+  site_numbering_schemes:  # map name to use to column in site_numbering_map
+    sequential: sequential
+    mature_H3: reference
+    mature_H5: mature_H5
   phenotypes: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes.csv
   escape_by_species: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes_per_antibody_escape.csv
 
