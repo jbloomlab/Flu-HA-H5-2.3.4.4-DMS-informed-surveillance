@@ -22,3 +22,7 @@ dms:
 
 # for DMS phenotypes, keep this many digits to the right of the decimal
 dms_decimal_scale: 2
+
+# Filters for analyses: keep just fulfilling filter for each analysis
+analysis_filters:
+  strict: {}

@@ -1,10 +1,21 @@
 """``snakemake`` file that runs analysis."""
 
 
+import io
+
+import ruamel.yaml as yaml
+
 from snakemake.utils import min_version
 
 
 min_version("8.16")
+
+
+def yaml_str(d):
+    """Convert a dictionary to a YAML str."""
+    stream = io.StringIO()
+    yaml.YAML().dump(d, stream)
+    return stream.getvalue()
 
 
 # global conda environment to run `snakemake`
@@ -22,6 +33,10 @@ rule all:
         "results/dms_data/phenotypes.csv",
         "results/usher_prots_w_dms/alignment.fa",
         "results/usher_prots_w_dms/seq_phenotypes.tsv",
+        expand(
+            "results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
+            analysis_filter=config["analysis_filters"],
+        ),
 
 
 rule usher_prebuilt:
@@ -51,6 +66,7 @@ rule extract_usher_seqs:
     input:
         tree=rules.usher_prebuilt.output.tree,
         ref=rules.usher_prebuilt.output.ref,
+        pyscript="scripts/extract_user_seqs.py",
     output:
         nt_seqs="results/usher_extracted_seqs/nt_seqs.fa",
         cds_seqs="results/usher_extracted_seqs/cds_seqs.fa",
@@ -63,7 +79,7 @@ rule extract_usher_seqs:
         "results/logs/extract_usher_seqs.txt",
     shell:
         """
-        python scripts/extract_usher_seqs.py \
+        python {input.pyscript} \
             --tree {input.tree} \
             --ref {input.ref} \
             --ref_cds_coords {params.ref_cds_coords} \
@@ -141,3 +157,25 @@ rule assign_dms_phenos:
         "results/logs/assign_dms_phenos.txt",
     script:
         "scripts/assign_dms_phenos.py"
+
+
+rule analyze_dms:
+    """Analyze the deep mutational scanning phenotypes."""
+    input:
+        tsv=rules.assign_dms_phenos.output.tsv,
+        nb="notebooks/analyze_dms.ipynb",
+    output:
+        nb="results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
+    params:
+        params_yaml=lambda wc, input: yaml_str(
+            {
+                "analysis_filters": config["analysis_filters"][wc.analysis_filter],
+                "input_tsv": input.tsv,
+            },
+        ),
+    conda:
+        "envs/python.yml"
+    log:
+        "results/logs/analyze_dms_{analysis_filter}.txt",
+    shell:
+        "papermill {input.nb} {output.nb} -y '{params.params_yaml}' &> {log}"

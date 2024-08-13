@@ -10,5 +10,6 @@ dependencies:
   - biopython=1.84
   - jupyterlab
   - pandas=2.2
+  - papermill=2.6.0
   - pyarrow
   - python=3.12
