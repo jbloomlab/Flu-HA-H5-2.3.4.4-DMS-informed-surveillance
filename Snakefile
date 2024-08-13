@@ -166,11 +166,13 @@ rule analyze_dms:
         nb="notebooks/analyze_dms.ipynb",
     output:
         nb="results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
+        filter_chart="results/dms_analysis/{analysis_filter}/filter_chart.html",
     params:
-        params_yaml=lambda wc, input: yaml_str(
+        params_yaml=lambda wc, input, output: yaml_str(
             {
                 "analysis_filters": config["analysis_filters"][wc.analysis_filter],
                 "input_tsv": input.tsv,
+                "filter_chart_html": output.filter_chart,
             },
         ),
     conda:

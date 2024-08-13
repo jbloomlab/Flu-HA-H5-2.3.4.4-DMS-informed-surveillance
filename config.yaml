@@ -25,4 +25,6 @@ dms_decimal_scale: 2
 
 # Filters for analyses: keep just fulfilling filter for each analysis
 analysis_filters:
-  strict: {}
+  high_ident:
+    frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
+    frac_divergence: 0.05  # require divergence among aligned residues to be <= this
