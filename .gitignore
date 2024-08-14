@@ -2,4 +2,12 @@
 !.git*
 _*
 
-results
+results/*
+!results/dms_data
+results/dms_data/*
+!results/dms_data/prot.fa
+!results/dms_data/phenotypes.csv
+
+!results/usher_prots_w_dms
+results/usher_prots_w_dms/*
+!results/usher_prots_w_dms/seq_phenotypes.tsv

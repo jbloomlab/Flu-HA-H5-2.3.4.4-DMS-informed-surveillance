@@ -28,11 +28,17 @@ pheno_scatter_init_phenos:
   x: ferret_sera_escape_increase
   y: frac_divergence
 
-# Filters for analyses: keep just fulfilling filter for each analysis
+# Filters for analyses: keep just strains fulfilling filter for each analysis
 analysis_filters:
-  high_ident:
+  max-diff-0.04:
     frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
-    frac_divergence: 0.05  # require divergence among aligned residues to be <= this
+    frac_divergence: 0.04  # require divergence among aligned residues to be <= this
+  max-diff-0.08:
+    frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
+    frac_divergence: 0.08  # require divergence among aligned residues to be <= this
+  max-diff-0.12:
+    frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
+    frac_divergence: 0.12  # require divergence among aligned residues to be <= this
 
 title: Influenza H5 HA annotated by deep mutational scanning phenotypes
 

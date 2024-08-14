@@ -28,13 +28,16 @@ configfile: "config.yaml"
 
 rule all:
     input:
-        "results/usher_extracted_seqs/prot_seqs.fa",
         "results/dms_data/prot.fa",
         "results/dms_data/phenotypes.csv",
-        "results/usher_prots_w_dms/alignment.fa",
         "results/usher_prots_w_dms/seq_phenotypes.tsv",
         expand(
-            "results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
+            [
+                "docs/{analysis_filter}_filter_chart.html",
+                "docs/{analysis_filter}_pheno_scatter_chart.html",
+                "results/haplotypes/{analysis_filter}.tsv",
+                "auspice/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance_{analysis_filter}.json",
+            ],
             analysis_filter=config["analysis_filters"],
         ),
 
@@ -66,7 +69,7 @@ rule extract_usher_seqs:
     input:
         tree=rules.usher_prebuilt.output.tree,
         ref=rules.usher_prebuilt.output.ref,
-        pyscript="scripts/extract_user_seqs.py",
+        pyscript="scripts/extract_usher_seqs.py",
     output:
         nt_seqs="results/usher_extracted_seqs/nt_seqs.fa",
         cds_seqs="results/usher_extracted_seqs/cds_seqs.fa",
@@ -159,18 +162,18 @@ rule assign_dms_phenos:
         "scripts/assign_dms_phenos.py"
 
 
-rule analyze_dms:
-    """Analyze the deep mutational scanning phenotypes."""
+rule visualize:
+    """Visualize the deep mutational scanning phenotypes."""
     input:
         tsv=rules.assign_dms_phenos.output.tsv,
         tree=rules.usher_prebuilt.output.tree,
-        nb="notebooks/analyze_dms.ipynb",
+        nb="notebooks/visualize.ipynb",
     output:
-        nb="results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
-        filter_chart="results/dms_analyses/{analysis_filter}/filter_chart.html",
-        pheno_scatter_chart="results/dms_analyses/{analysis_filter}/pheno_scatter_chart.html",
-        nextstrain_json="results/dms_analyses/{analysis_filter}/nextstrain.json",
-        haplotypes_csv="results/dms_analyses/{analysis_filter}/haplotypes.csv",
+        nb="results/visualizations/{analysis_filter}/visualize.ipynb",
+        filter_chart="docs/{analysis_filter}_filter_chart.html",
+        pheno_scatter_chart="docs/{analysis_filter}_pheno_scatter_chart.html",
+        nextstrain_json="auspice/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance_{analysis_filter}.json",
+        haplotypes_tsv="results/haplotypes/{analysis_filter}.tsv",
     params:
         params_yaml=lambda wc, input, output: yaml_str(
             {
@@ -184,35 +187,13 @@ rule analyze_dms:
                 "usher_tree": input.tree,
                 "filter_chart_html": output.filter_chart,
                 "pheno_scatter_chart_html": output.pheno_scatter_chart,
-                "haplotypes_csv": output.haplotypes_csv,
+                "haplotypes_tsv": output.haplotypes_tsv,
                 "nextstrain_json": output.nextstrain_json,
             },
         ),
     conda:
         "envs/python.yml"
     log:
-        "results/logs/analyze_dms_{analysis_filter}.txt",
+        "results/logs/visualizations_{analysis_filter}.txt",
     shell:
         "papermill {input.nb} {output.nb} -y '{params.params_yaml}' &> {log}"
-
-
-rule nextstrain_json:
-    """Make a Nextstrain JSON for each analysis filter."""
-    input:
-        metadata_tsv=rules.assign_dms_phenos.output.tsv,
-        tree=rules.usher_prebuilt.output.tree,
-    output:
-        json="results/dms_analyses/{analysis_filter}/dms_annotated_tree.json22",
-    conda:
-        "envs/usher.yml",
-    log:
-        "results/logs/analyze_dms_{analysis_filter}.txt",
-    shell:
-        """
-        matUtils extract \
-            -i {input.tree} \
-            -M {input.metadata_tsv} \
-            -s {input.samples} \
-            -j {output.json} \
-            &> {log}
-        """
