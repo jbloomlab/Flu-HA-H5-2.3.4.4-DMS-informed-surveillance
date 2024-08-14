@@ -33,3 +33,8 @@ analysis_filters:
   high_ident:
     frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
     frac_divergence: 0.05  # require divergence among aligned residues to be <= this
+
+title: Influenza H5 HA annotated by deep mutational scanning phenotypes
+
+description: |
+  See https://github.com/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance for details.

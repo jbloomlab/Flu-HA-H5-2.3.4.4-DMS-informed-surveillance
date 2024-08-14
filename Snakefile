@@ -74,7 +74,7 @@ rule extract_usher_seqs:
     params:
         ref_cds_coords=config["usher_prebuilt"]["ref_cds_coords"],
     conda:
-        "envs/bte.yml"
+        "envs/python.yml"
     log:
         "results/logs/extract_usher_seqs.txt",
     shell:
@@ -163,12 +163,14 @@ rule analyze_dms:
     """Analyze the deep mutational scanning phenotypes."""
     input:
         tsv=rules.assign_dms_phenos.output.tsv,
+        tree=rules.usher_prebuilt.output.tree,
         nb="notebooks/analyze_dms.ipynb",
     output:
         nb="results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
         filter_chart="results/dms_analyses/{analysis_filter}/filter_chart.html",
         pheno_scatter_chart="results/dms_analyses/{analysis_filter}/pheno_scatter_chart.html",
-        samples="results/dms_analyses/{analysis_filter}/samples.txt",
+        nextstrain_json="results/dms_analyses/{analysis_filter}/nextstrain.json",
+        haplotypes_csv="results/dms_analyses/{analysis_filter}/haplotypes.csv",
     params:
         params_yaml=lambda wc, input, output: yaml_str(
             {
@@ -176,10 +178,14 @@ rule analyze_dms:
                 "decimal_scale": config["dms_decimal_scale"],
                 "pheno_scatter_init_phenos": config["pheno_scatter_init_phenos"],
                 "site_numbering_schemes": list(config["dms"]["site_numbering_schemes"]),
+                "title": config["title"],
+                "description": config["description"],
                 "input_tsv": input.tsv,
+                "usher_tree": input.tree,
                 "filter_chart_html": output.filter_chart,
                 "pheno_scatter_chart_html": output.pheno_scatter_chart,
-                "samples_txt": output.samples,
+                "haplotypes_csv": output.haplotypes_csv,
+                "nextstrain_json": output.nextstrain_json,
             },
         ),
     conda:
@@ -188,3 +194,25 @@ rule analyze_dms:
         "results/logs/analyze_dms_{analysis_filter}.txt",
     shell:
         "papermill {input.nb} {output.nb} -y '{params.params_yaml}' &> {log}"
+
+
+rule nextstrain_json:
+    """Make a Nextstrain JSON for each analysis filter."""
+    input:
+        metadata_tsv=rules.assign_dms_phenos.output.tsv,
+        tree=rules.usher_prebuilt.output.tree,
+    output:
+        json="results/dms_analyses/{analysis_filter}/dms_annotated_tree.json22",
+    conda:
+        "envs/usher.yml",
+    log:
+        "results/logs/analyze_dms_{analysis_filter}.txt",
+    shell:
+        """
+        matUtils extract \
+            -i {input.tree} \
+            -M {input.metadata_tsv} \
+            -s {input.samples} \
+            -j {output.json} \
+            &> {log}
+        """
