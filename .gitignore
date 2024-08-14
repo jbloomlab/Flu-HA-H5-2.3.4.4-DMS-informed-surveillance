@@ -16,3 +16,7 @@ results/usher_prebuilt/*
 !results/usher_prots_w_dms
 results/usher_prots_w_dms/*
 !results/usher_prots_w_dms/seq_phenotypes.tsv
+
+!results/haplotypes/
+results/haplotypes/*
+!results/haplotypes/*.tsv
