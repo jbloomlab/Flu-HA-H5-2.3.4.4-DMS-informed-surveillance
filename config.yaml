@@ -21,7 +21,12 @@ dms:
   escape_by_species: https://raw.githubusercontent.com/dms-vep/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/main/results/summaries/phenotypes_per_antibody_escape.csv
 
 # for DMS phenotypes, keep this many digits to the right of the decimal
-dms_decimal_scale: 2
+dms_decimal_scale: 3
+
+# For the scatter plots of phenotypes, initial phenotypes for x and y-axis
+pheno_scatter_init_phenos:
+  x: ferret_sera_escape_increase
+  y: frac_divergence
 
 # Filters for analyses: keep just fulfilling filter for each analysis
 analysis_filters:

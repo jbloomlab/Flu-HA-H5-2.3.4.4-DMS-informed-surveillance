@@ -166,13 +166,20 @@ rule analyze_dms:
         nb="notebooks/analyze_dms.ipynb",
     output:
         nb="results/dms_analyses/{analysis_filter}/analyze_dms.ipynb",
-        filter_chart="results/dms_analysis/{analysis_filter}/filter_chart.html",
+        filter_chart="results/dms_analyses/{analysis_filter}/filter_chart.html",
+        pheno_scatter_chart="results/dms_analyses/{analysis_filter}/pheno_scatter_chart.html",
+        samples="results/dms_analyses/{analysis_filter}/samples.txt",
     params:
         params_yaml=lambda wc, input, output: yaml_str(
             {
                 "analysis_filters": config["analysis_filters"][wc.analysis_filter],
+                "decimal_scale": config["dms_decimal_scale"],
+                "pheno_scatter_init_phenos": config["pheno_scatter_init_phenos"],
+                "site_numbering_schemes": list(config["dms"]["site_numbering_schemes"]),
                 "input_tsv": input.tsv,
                 "filter_chart_html": output.filter_chart,
+                "pheno_scatter_chart_html": output.pheno_scatter_chart,
+                "samples_txt": output.samples,
             },
         ),
     conda:
