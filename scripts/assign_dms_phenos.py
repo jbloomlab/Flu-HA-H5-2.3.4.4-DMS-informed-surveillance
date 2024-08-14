@@ -74,11 +74,22 @@ for seq in Bio.SeqIO.parse(snakemake.input.alignment, "fasta"):
     ]
     frac_divergence = len(aa_mutations) / len(seq_str)
 
-    records.append((seq.id, aa_mutations, frac_aligned, frac_divergence))
+    record = [seq.id, frac_aligned, frac_divergence, aa_mutations]
+    for scheme in site_numbering_schemes:
+        d = sequential_to_mutation[f"mutation_{scheme}"]
+        record.append(", ".join(d[m] for m in aa_mutations))
+
+    records.append(record)
 
 dms_df = pd.DataFrame(
     records,
-    columns=["name", "mutations", "frac_aligned", "frac_divergence"],
+    columns=[
+        "name",
+        "frac_aligned",
+        "frac_divergence",
+        "aa_mutations",
+        *[f"mutations_{scheme}" for scheme in site_numbering_schemes],
+    ],
 )
 
 # assign phenotypes to each sequence along with mutations and constituent effects
@@ -86,7 +97,7 @@ dms_phenos_df = []
 for pheno in phenos:
     pheno_df = dms_df.assign(
         phenotype_name=pheno,
-        phenotype_value=lambda x: x["mutations"].map(
+        phenotype_value=lambda x: x["aa_mutations"].map(
             lambda ms: sum(
                 mut_to_pheno[pheno][m]
                 for m in ms
@@ -94,21 +105,18 @@ for pheno in phenos:
             )
         ),
     )
-    for scheme in site_numbering_schemes:
-        d = sequential_to_mutation[f"mutation_{scheme}"]
-        pheno_df[f"mutations_{scheme}"] = pheno_df["mutations"].map(
-            lambda ms: ", ".join(
-                f"{d[m]}=" + (
-                    f"{{:.{decimal_scale}f}}".format(mut_to_pheno[pheno][m])
-                    if (m in mut_to_pheno[pheno]) and pd.notnull(mut_to_pheno[pheno][m])
-                    else "na"
-                )
-                for m in ms
-            )
-        )
     dms_phenos_df.append(pheno_df)
     
-dms_phenos_df = pd.concat(dms_phenos_df, ignore_index=True).drop(columns="mutations")
+dms_phenos_df = (
+    pd.concat(dms_phenos_df, ignore_index=True)
+    .drop(columns="aa_mutations")
+    .pivot_table(
+        index=[c for c in dms_df.columns if c != "aa_mutations"],
+        columns="phenotype_name",
+        values="phenotype_value",
+    )
+    .reset_index()
+)
 
 dms_phenos_df.to_csv(
     snakemake.output.tsv, index=False, float_format=f"%.{decimal_scale}f", sep="\t"
