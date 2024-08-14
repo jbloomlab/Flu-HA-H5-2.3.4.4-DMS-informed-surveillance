@@ -91,3 +91,5 @@ The Nextstrain Auspice JSON files are placed in [./auspice/](auspice), where the
 ## Re-running the pipeline as data are updated
 As the [pre-built UShER tree](https://hgdownload.gi.ucsc.edu/hubs/GCF/000/864/105/GCF_000864105.1/UShER_NC_007362.1/) is updated, you will want to re-run the pipeline.
 To do that, just remove the contents of the [./results/](results), [./docs/](docs), and [./auspice](auspice) subidirectories and then just re-run the pipeline.
+
+The script [check_for_prebuilt_usher_update.py](check_for_prebuilt_usher_update.py) can be set up to run using `crontab -e` to check for such updates.
