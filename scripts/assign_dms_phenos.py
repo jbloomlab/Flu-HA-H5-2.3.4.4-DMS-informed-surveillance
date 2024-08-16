@@ -1,3 +1,5 @@
+import datetime
+import re
 import sys
 
 import Bio.SeqIO
@@ -5,7 +7,36 @@ import Bio.SeqIO
 import pandas as pd
 
 
-#sys.stderr = sys.stdout = open(snakemake.log[0], "w")
+def decimal_year(date_string):
+    if date_string == "?":
+        return pd.NA
+    elif re.fullmatch("\d{4}\-\d{2}\-\d{2}", date_string):
+        date_format = "%Y-%m-%d"
+    elif re.fullmatch("\d{4}\-\d{2}", date_string):
+        date_format = "%Y-%m"
+    elif re.fullmatch("\d{4}", date_string):
+        date_format = "%Y"
+    else:
+        raise ValueError(f"unrecognized {date_string=}")
+    date = datetime.datetime.strptime(date_string, date_format)
+
+    # Get the start of the year and the start of the next year
+    start_of_year = datetime.datetime(year=date.year, month=1, day=1)
+    start_of_next_year = datetime.datetime(year=date.year + 1, month=1, day=1)
+
+    # Calculate the number of days since the start of the year
+    days_since_start_of_year = (date - start_of_year).days
+
+    # Calculate the total number of days in the year
+    total_days_in_year = (start_of_next_year - start_of_year).days
+
+    # Calculate the decimal year
+    decimal_year = date.year + days_since_start_of_year / total_days_in_year
+
+    return decimal_year
+
+
+sys.stderr = sys.stdout = open(snakemake.log[0], "w")
 
 decimal_scale = snakemake.params.decimal_scale
 site_numbering_schemes = snakemake.params.site_numbering_schemes
@@ -66,6 +97,8 @@ for seq in Bio.SeqIO.parse(snakemake.input.alignment, "fasta"):
     assert all(aa in aas for aa in seq_str), seq_str
     assert seq.id == seq.name == seq.description, f"{seq.id=}\n{seq.name=}\n{seq.description=}"
 
+    date = decimal_year(seq.id.split("|")[-1])
+
     frac_aligned = sum(aa != "-" for aa in seq_str) / len(seq_str)
     aa_mutations = [
         f"{aa_dms}{r}{aa_seq}"
@@ -74,7 +107,7 @@ for seq in Bio.SeqIO.parse(snakemake.input.alignment, "fasta"):
     ]
     frac_divergence = len(aa_mutations) / len(seq_str)
 
-    record = [seq.id, frac_aligned, frac_divergence, aa_mutations]
+    record = [seq.id, date, frac_aligned, frac_divergence, aa_mutations]
     for scheme in site_numbering_schemes:
         d = sequential_to_mutation[f"mutation_{scheme}"]
         record.append(", ".join(d[m] for m in aa_mutations))
@@ -85,6 +118,7 @@ dms_df = pd.DataFrame(
     records,
     columns=[
         "name",
+        "date",
         "frac_aligned",
         "frac_divergence",
         "aa_mutations",
