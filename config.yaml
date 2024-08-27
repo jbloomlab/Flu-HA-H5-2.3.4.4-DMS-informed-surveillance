@@ -30,6 +30,10 @@ pheno_scatter_init_phenos:
 
 # Filters for analyses: keep just strains fulfilling filter for each analysis
 analysis_filters:
+  cattle:
+    frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
+    frac_divergence: 0.1  # require divergence among aligned residues to be <= this
+    strain_regex: "(?i)cattle"  # require strain to contain this regex
   max-diff-0.04:
     frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
     frac_divergence: 0.04  # require divergence among aligned residues to be <= this

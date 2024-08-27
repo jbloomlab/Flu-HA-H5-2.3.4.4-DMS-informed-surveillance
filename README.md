@@ -17,6 +17,7 @@ You can mouseover points for details, adjust which DMS phenotypes are shown on t
 
 The plots are at:
 
+ - Strains from cattle with no more than 10% divergence from DMS strain: [https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/cattle_pheno_scatter_chart.html](https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/cattle_pheno_scatter_chart.html)
  - Proteins with no more than 4% divergence from DMS strain: [https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.04_pheno_scatter_chart.html](https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.04_pheno_scatter_chart.html)
  - Proteins with no more than 8% divergence from DMS strain: [https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.08_pheno_scatter_chart.html](https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.08_pheno_scatter_chart.html)
  - Proteins with no more than 12% divergence from DMS strain: [https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.12_pheno_scatter_chart.html](https://jbloomlab.github.io/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.12_pheno_scatter_chart.html)
@@ -25,6 +26,7 @@ The plots are at:
 These trees are the ones built by UShER on the nucleotide sequences, but points are colored by the DMS phenotypes based on the proteins.
 You can use the dropdown at left to choose which phenotype to use to color the trees, and mouseover points for details:
 
+  - Strains from cattle with no more than 10% divergence from the DMS strain: [https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/cattle](https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/cattle)
   - Strains with no more than 4% protein divergence from the DMS strain: [https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.04](https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.04)
   - Strains with no more than 8% protein divergence from the DMS strain: [https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.08](https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.08)
   - Strains with no more than 12% protein divergence from the DMS strain: [https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.12](https://nextstrain.org/community/jbloomlab/Flu-HA-H5-2.3.4.4-DMS-informed-surveillance/max-diff-0.12)
