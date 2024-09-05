@@ -33,7 +33,7 @@ analysis_filters:
   cattle:
     frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
     frac_divergence: 0.1  # require divergence among aligned residues to be <= this
-    strain_regex: "(?i)cattle(?!_egret)"  # require strain to contain this regex
+    strain_regex: "(?i)cattle(?!_egret)|(?i)dairy_cow"  # require strain to contain this regex
   max-diff-0.04:
     frac_aligned: 0.98  # require >= this fraction of residues to be aligned (not gapped)
     frac_divergence: 0.04  # require divergence among aligned residues to be <= this
