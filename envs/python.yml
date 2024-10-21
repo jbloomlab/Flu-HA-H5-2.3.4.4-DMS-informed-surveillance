@@ -3,7 +3,6 @@ name: python
 channels:
   - conda-forge
   - bioconda
-  - defaults
 
 dependencies:
   - altair=5.4.0
