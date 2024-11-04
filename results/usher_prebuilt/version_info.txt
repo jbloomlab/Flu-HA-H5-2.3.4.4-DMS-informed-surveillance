@@ -1,1 +1,1 @@
-15,501 genomes from INSDC (GenBank/ENA/DDBJ) (2024-10-20)
+15,573 genomes from INSDC (GenBank/ENA/DDBJ) (2024-11-03)
